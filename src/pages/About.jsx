@@ -508,53 +508,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════
-          9. FOOTER CTA BAND
-      ══════════════════════════════════════ */}
-      <section style={{
-        backgroundColor: '#0F0F0F',
-        padding: '80px 64px',
-        textAlign: 'center',
-      }}>
-        <h2 style={{
-          fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 'clamp(1.8rem, 3vw, 2.6rem)',
-          fontWeight: 300, color: '#ffffff',
-          letterSpacing: '0.12em',
-          textTransform: 'uppercase',
-          marginBottom: '12px',
-        }}>
-          EVENTIFY WITH K&amp;A
-        </h2>
-        <p style={{
-          fontFamily: "'Jost', sans-serif",
-          fontSize: '12px', color: 'rgba(255,255,255,0.5)',
-          letterSpacing: '0.04em', lineHeight: 1.9,
-          marginBottom: '36px',
-        }}>
-          Hello, we are K&amp;A, trying to make an effort to put the right people for you to get the best results.<br />
-          Just Insight
-        </p>
-        <div style={{ display: 'flex', gap: '24px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link to="/services" style={{
-            fontFamily: "'Jost', sans-serif",
-            fontSize: '11px', letterSpacing: '0.12em',
-            textTransform: 'uppercase', color: '#ffffff',
-            textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px',
-          }}>
-            ◎ Services
-          </Link>
-          <Link to="/contact" style={{
-            fontFamily: "'Jost', sans-serif",
-            fontSize: '11px', letterSpacing: '0.12em',
-            textTransform: 'uppercase', color: '#C2A14D',
-            textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px',
-          }}>
-            ✦ Contact
-          </Link>
-        </div>
-      </section>
-
     </main>
   )
 }
