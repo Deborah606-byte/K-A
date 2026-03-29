@@ -1,27 +1,18 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { LuClipboardList, LuPalette, LuCalendarCheck, LuHeartHandshake } from 'react-icons/lu'
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 
 /* ─────────────────────────────────────────
    IMAGE MAP — place these in src/assets/
-   and rename to match exactly:
 ─────────────────────────────────────────
-  services-hero.png        → hero background (two women with clipboard)
-
-  Each service needs TWO images:
-  svc-weddings-main.png        svc-weddings-inset.png
-  svc-engagements-main.png     svc-engagements-inset.png
-  svc-bridal-main.png          svc-bridal-inset.png
-  svc-baby-main.png            svc-baby-inset.png
-  svc-birthdays-main.png       svc-birthdays-inset.png
-  svc-proposals-main.png       svc-proposals-inset.png
-  svc-corporate-main.png       svc-corporate-inset.png
-  svc-funerals-main.png        svc-funerals-inset.png
+  servicehero.png          → hero background
+  wedding.png              → main image (replace per service)
+  wedding2.png             → inset image (replace per service)
 ───────────────────────────────────────── */
-import servicesHero       from '../assets/servicehero.png'
-import weddingsMain       from '../assets/wedding.png'
-import weddingsInset      from '../assets/wedding2.png'
+import servicesHero    from '../assets/servicehero.png'
+import weddingsMain    from '../assets/wedding.png'
+import weddingsInset   from '../assets/wedding2.png'
 import engagementsMain    from '../assets/wedding.png'
 import engagementsInset   from '../assets/wedding2.png'
 import bridalMain         from '../assets/wedding.png'
@@ -37,141 +28,109 @@ import corporateInset     from '../assets/wedding2.png'
 import funeralsMain       from '../assets/wedding.png'
 import funeralsInset      from '../assets/wedding2.png'
 
-/* ── Services data ── */
+/* ── Services data — each has a unique slug used as the URL hash ── */
 const services = [
   {
+    slug:  'weddings',
     title: 'WEDDINGS',
-    main: weddingsMain,
+    main:  weddingsMain,
     inset: weddingsInset,
-    body1: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown
-Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived
-Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall
-Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s,`,
-    bold: `When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book.
-It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting,
-Remaining Essentiall`,
-    body2: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown
-Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived
-Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
+    body1: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s,`,
+    bold:  `When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
+    body2: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
   },
   {
+    slug:  'engagements',
     title: 'ENGAGEMENTS',
-    main: engagementsMain,
+    main:  engagementsMain,
     inset: engagementsInset,
-    body1: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown
-Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived
-Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall
-Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s,`,
-    bold: `When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book.
-It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting,
-Remaining Essentiall`,
-    body2: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown
-Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived
-Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
+    body1: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s,`,
+    bold:  `When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
+    body2: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
   },
   {
+    slug:  'bridal-showers',
     title: 'BRIDAL SHOWERS',
-    main: bridalMain,
+    main:  bridalMain,
     inset: bridalInset,
-    body1: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown
-Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived
-Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall
-Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s,`,
-    bold: `When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book.
-It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting,
-Remaining Essentiall`,
-    body2: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown
-Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived
-Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
+    body1: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s,`,
+    bold:  `When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
+    body2: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
   },
   {
+    slug:  'baby-showers',
     title: 'BABY SHOWERS',
-    main: babyMain,
+    main:  babyMain,
     inset: babyInset,
-    body1: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown
-Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived
-Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall
-Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s,`,
-    bold: `When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book.
-It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting,
-Remaining Essentiall`,
-    body2: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown
-Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived
-Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
+    body1: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s,`,
+    bold:  `When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
+    body2: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
   },
   {
+    slug:  'birthdays',
     title: 'BIRTHDAYS',
-    main: birthdaysMain,
+    main:  birthdaysMain,
     inset: birthdaysInset,
-    body1: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown
-Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived
-Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall
-Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s,`,
-    bold: `When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book.
-It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting,
-Remaining Essentiall`,
-    body2: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown
-Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived
-Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
+    body1: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s,`,
+    bold:  `When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
+    body2: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
   },
   {
+    slug:  'proposals',
     title: 'PROPOSALS',
-    main: proposalsMain,
+    main:  proposalsMain,
     inset: proposalsInset,
-    body1: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown
-Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived
-Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall
-Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s,`,
-    bold: `When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book.
-It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting,
-Remaining Essentiall`,
-    body2: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown
-Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived
-Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
+    body1: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s,`,
+    bold:  `When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
+    body2: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
   },
   {
+    slug:  'corporate-events',
     title: 'CORPORATE EVENTS',
-    main: corporateMain,
+    main:  corporateMain,
     inset: corporateInset,
-    body1: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown
-Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived
-Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall
-Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s,`,
-    bold: `When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book.
-It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting,
-Remaining Essentiall`,
-    body2: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown
-Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived
-Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
+    body1: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s,`,
+    bold:  `When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
+    body2: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
   },
   {
+    slug:  'funerals',
     title: 'FUNERALS',
-    main: funeralsMain,
+    main:  funeralsMain,
     inset: funeralsInset,
-    body1: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown
-Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived
-Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall
-Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s,`,
-    bold: `When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book.
-It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting,
-Remaining Essentiall`,
-    body2: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown
-Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived
-Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
+    body1: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s,`,
+    bold:  `When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
+    body2: `Lorem Ipsum Has Been The Industry's Standard Dummy Text Ever Since The 1500s, When An Unknown Printer Took A Galley Of Type And Scrambled It To Make A Type Specimen Book. It Has Survived Not Only Five Centuries, But Also The Leap Into Electronic Typesetting, Remaining Essentiall`,
   },
 ]
 
-/* ── Approach steps ── */
 const approachSteps = [
-  { icon: <LuClipboardList size={30} />, label: 'Consultation and\nplanning',        highlight: false },
-  { icon: <LuPalette size={30} />,       label: 'Design and\nconceptualization',      highlight: true  },
-  { icon: <LuCalendarCheck size={30} />, label: 'Execution and\ncoordination',        highlight: false },
-  { icon: <LuHeartHandshake size={30} />,label: 'Follow-up',                          highlight: false },
+  { icon: <LuClipboardList size={30} />,   label: 'Consultation and\nplanning',   highlight: false },
+  { icon: <LuPalette size={30} />,         label: 'Design and\nconceptualization', highlight: true  },
+  { icon: <LuCalendarCheck size={30} />,   label: 'Execution and\ncoordination',   highlight: false },
+  { icon: <LuHeartHandshake size={30} />,  label: 'Follow-up',                     highlight: false },
 ]
 
 export default function Services() {
-  const [current, setCurrent] = useState(0)
+  const location = useLocation()
+  const [current,   setCurrent]   = useState(0)
   const [animating, setAnimating] = useState(false)
+
+  /* ── On load, check the URL hash and jump to that service ── */
+  useEffect(() => {
+    const hash = location.hash.replace('#', '')   // e.g. "funerals"
+    if (hash) {
+      const index = services.findIndex(s => s.slug === hash)
+      if (index !== -1) {
+        setCurrent(index)
+        // Small delay so the page has painted before scrolling
+        setTimeout(() => {
+          const el = document.getElementById('service-display')
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }, 100)
+      }
+    }
+  }, [location.hash])
 
   const goTo = (index) => {
     if (animating || index === current) return
@@ -230,15 +189,19 @@ export default function Services() {
 
       {/* ══════════════════════════════════════
           2. SERVICE SLIDER
+          id="service-display" ← scroll target
       ══════════════════════════════════════ */}
-      <section style={{
-        padding: '88px 64px 0',
-        maxWidth: '1280px',
-        margin: '0 auto',
-        position: 'relative',
-      }}>
-
-        {/* Slide content — fades in/out on change */}
+      <section
+        id="service-display"
+        style={{
+          padding: '88px 64px 0',
+          maxWidth: '1280px',
+          margin: '0 auto',
+          position: 'relative',
+          scrollMarginTop: '80px',   /* offset for fixed navbar */
+        }}
+      >
+        {/* Slide content */}
         <div style={{
           display: 'flex',
           alignItems: 'flex-start',
@@ -247,57 +210,60 @@ export default function Services() {
           transition: 'opacity 0.22s ease',
         }}>
 
-          {/* ── LEFT: olive bg + gold border + portrait ── */}
-          <div style={{
-            flex: '0 0 42%',
-            position: 'relative',
-            minHeight: '520px',
-          }}>
-            {/* Olive background block */}
+          {/* LEFT: olive bg + gold border + portrait */}
+          <div style={{ flex: '0 0 42%', position: 'relative', minHeight: '580px' }}>
+
+            {/* 1. Olive green block — anchored top-left, extends to bottom-right */}
             <div style={{
               position: 'absolute',
-              top: 0, left: 0,
-              width: '74%', height: '80%',
+              top: 0,
+              left: 0,
+              width: '78%',
+              height: '90%',
               backgroundColor: '#6B7C3E',
               zIndex: 0,
             }} />
-            {/* Gold border frame */}
+
+            {/* 2. Gold border — inset inside olive, a gap shows on all 4 sides */}
             <div style={{
               position: 'absolute',
-              top: '28px', left: '20px',
-              width: '62%', height: '68%',
+              top: '16px',
+              left: '16px',
+              width: 'calc(78% - 32px)',
+              height: 'calc(90% - 32px)',
               border: '2px solid #C2A14D',
               zIndex: 1,
             }} />
-            {/* Main portrait image */}
+
+            {/* 3. Photo — inset further inside the gold border */}
             <img
               key={`main-${current}`}
               src={svc.main}
               alt={svc.title}
               style={{
                 position: 'absolute',
-                top: '44px', left: '36px',
-                width: '60%', height: '66%',
+                top: '28px',
+                left: '28px',
+                width: 'calc(78% - 56px)',
+                height: 'calc(90% - 56px)',
                 objectFit: 'cover',
+                objectPosition: 'center top',
                 zIndex: 2,
                 display: 'block',
               }}
             />
           </div>
 
-          {/* ── RIGHT: title, text, inset image ── */}
+          {/* RIGHT: title, text, inset image */}
           <div style={{ flex: 1, paddingTop: '8px' }}>
             <h2 style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontSize: 'clamp(2rem, 3.5vw, 3rem)',
-              fontWeight: 600,
-              color: '#6B7C3E',
-              letterSpacing: '0.06em',
-              marginBottom: '28px',
+              fontWeight: 600, color: '#6B7C3E',
+              letterSpacing: '0.06em', marginBottom: '28px',
             }}>
               {svc.title}
             </h2>
-
             <p style={{
               fontFamily: "'Jost', sans-serif",
               fontSize: '13px', color: '#666',
@@ -308,7 +274,6 @@ export default function Services() {
                 {svc.bold}
               </strong>
             </p>
-
             <p style={{
               fontFamily: "'Jost', sans-serif",
               fontSize: '13px', color: '#666',
@@ -316,64 +281,51 @@ export default function Services() {
             }}>
               {svc.body2}
             </p>
-
-            {/* Inset photo */}
             <img
               key={`inset-${current}`}
               src={svc.inset}
               alt={`${svc.title} detail`}
               style={{
-                width: '62%',
-                aspectRatio: '4/3',
-                objectFit: 'cover',
-                display: 'block',
+                width: '62%', aspectRatio: '4/3',
+                objectFit: 'cover', display: 'block',
               }}
             />
           </div>
         </div>
 
-        {/* ── Pagination dots + arrow controls ── */}
+        {/* Pagination dots + arrows */}
         <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '16px',
+          display: 'flex', alignItems: 'center',
+          justifyContent: 'center', gap: '16px',
           padding: '52px 0 72px',
         }}>
-          {/* Prev arrow */}
-          <button
-            onClick={prev}
-            aria-label="Previous service"
-            style={{
-              background: 'none', border: 'none', cursor: 'pointer',
-              padding: '4px', color: '#aaa',
-              transition: 'color 0.2s',
-              display: 'flex', alignItems: 'center',
-            }}
+          <button onClick={prev} aria-label="Previous service" style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            padding: '4px', color: '#aaa', transition: 'color 0.2s',
+            display: 'flex', alignItems: 'center',
+          }}
             onMouseEnter={e => e.currentTarget.style.color = '#C2A14D'}
             onMouseLeave={e => e.currentTarget.style.color = '#aaa'}
           >
             <FiChevronLeft size={18} />
           </button>
 
-          {/* Dots */}
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            {services.map((_, i) => (
+            {services.map((s, i) => (
               <button
                 key={i}
                 onClick={() => goTo(i)}
-                aria-label={`Go to ${services[i].title}`}
+                aria-label={`Go to ${s.title}`}
+                title={s.title}
                 style={{
                   background: 'none', border: 'none', cursor: 'pointer',
-                  padding: '4px 0',
-                  display: 'flex', alignItems: 'center',
+                  padding: '4px 0', display: 'flex', alignItems: 'center',
                 }}
               >
                 <span style={{
                   display: 'block',
                   width: i === current ? '24px' : '8px',
-                  height: '8px',
-                  borderRadius: '4px',
+                  height: '8px', borderRadius: '4px',
                   backgroundColor: i === current ? '#C2A14D' : '#ddd',
                   transition: 'all 0.3s ease',
                 }} />
@@ -381,16 +333,11 @@ export default function Services() {
             ))}
           </div>
 
-          {/* Next arrow */}
-          <button
-            onClick={next}
-            aria-label="Next service"
-            style={{
-              background: 'none', border: 'none', cursor: 'pointer',
-              padding: '4px', color: '#aaa',
-              transition: 'color 0.2s',
-              display: 'flex', alignItems: 'center',
-            }}
+          <button onClick={next} aria-label="Next service" style={{
+            background: 'none', border: 'none', cursor: 'pointer',
+            padding: '4px', color: '#aaa', transition: 'color 0.2s',
+            display: 'flex', alignItems: 'center',
+          }}
             onMouseEnter={e => e.currentTarget.style.color = '#C2A14D'}
             onMouseLeave={e => e.currentTarget.style.color = '#aaa'}
           >
@@ -398,13 +345,11 @@ export default function Services() {
           </button>
         </div>
 
-        {/* Slide counter (optional — matches design aesthetic) */}
+        {/* Slide counter */}
         <div style={{
-          position: 'absolute',
-          bottom: '72px', right: '64px',
+          position: 'absolute', bottom: '72px', right: '64px',
           fontFamily: "'Jost', sans-serif",
-          fontSize: '11px', letterSpacing: '0.12em',
-          color: '#bbb',
+          fontSize: '11px', letterSpacing: '0.12em', color: '#bbb',
         }}>
           {String(current + 1).padStart(2, '0')} / {String(services.length).padStart(2, '0')}
         </div>
@@ -415,26 +360,20 @@ export default function Services() {
       ══════════════════════════════════════ */}
       <section style={{
         padding: '80px 64px 96px',
-        backgroundColor: '#fafaf8',
-        textAlign: 'center',
+        backgroundColor: '#fafaf8', textAlign: 'center',
       }}>
         <p style={{
           fontFamily: "'Cormorant Garamond', serif",
           fontSize: 'clamp(1rem, 1.4vw, 1.15rem)',
-          fontStyle: 'italic',
-          color: '#C2A14D',
-          letterSpacing: '0.06em',
-          marginBottom: '56px',
+          fontStyle: 'italic', color: '#C2A14D',
+          letterSpacing: '0.06em', marginBottom: '56px',
         }}>
           Our Approach
         </p>
 
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '20px',
-          maxWidth: '880px',
-          margin: '0 auto',
+          display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
+          gap: '20px', maxWidth: '880px', margin: '0 auto',
         }}>
           {approachSteps.map((step, i) => (
             <div key={i} style={{
@@ -451,62 +390,13 @@ export default function Services() {
                 fontFamily: "'Jost', sans-serif",
                 fontSize: '12px',
                 color: step.highlight ? '#ffffff' : '#666',
-                lineHeight: 1.7,
-                whiteSpace: 'pre-line',
-                textAlign: 'center',
-                margin: 0,
+                lineHeight: 1.7, whiteSpace: 'pre-line',
+                textAlign: 'center', margin: 0,
               }}>
                 {step.label}
               </p>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════
-          4. FOOTER CTA BAND
-      ══════════════════════════════════════ */}
-      <section style={{
-        backgroundColor: '#0F0F0F',
-        padding: '80px 64px',
-        textAlign: 'center',
-      }}>
-        <h2 style={{
-          fontFamily: "'Cormorant Garamond', serif",
-          fontSize: 'clamp(1.8rem, 3vw, 2.6rem)',
-          fontWeight: 300, color: '#ffffff',
-          letterSpacing: '0.12em',
-          textTransform: 'uppercase',
-          marginBottom: '12px',
-        }}>
-          EVENTIFY WITH K&amp;A
-        </h2>
-        <p style={{
-          fontFamily: "'Jost', sans-serif",
-          fontSize: '12px', color: 'rgba(255,255,255,0.5)',
-          letterSpacing: '0.04em',
-          lineHeight: 1.9, marginBottom: '36px',
-        }}>
-          Hello, we are K&amp;A, trying to make an effort to put the right people for you to get the best results.<br />
-          Just Insight
-        </p>
-        <div style={{ display: 'flex', gap: '24px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link to="/services" style={{
-            fontFamily: "'Jost', sans-serif",
-            fontSize: '11px', letterSpacing: '0.12em',
-            textTransform: 'uppercase', color: '#ffffff',
-            textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px',
-          }}>
-            ◎ Services
-          </Link>
-          <Link to="/contact" style={{
-            fontFamily: "'Jost', sans-serif",
-            fontSize: '11px', letterSpacing: '0.12em',
-            textTransform: 'uppercase', color: '#C2A14D',
-            textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px',
-          }}>
-            ✦ Contact
-          </Link>
         </div>
       </section>
 
